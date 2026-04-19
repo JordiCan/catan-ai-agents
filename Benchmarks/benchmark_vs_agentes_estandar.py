@@ -44,6 +44,52 @@ n_matches_per_permutation = 10
 porcentaje_workers = 0.95
 random_seed_base = 54321
 
+MATCH_FIELDNAMES = [
+    "benchmark",
+    "run_id",
+    "agent_name",
+    "provider",
+    "model",
+    "prompt",
+    "permutation_index",
+    "match_index",
+    "seed",
+    "position",
+    "seat",
+    "opponent_1",
+    "opponent_2",
+    "opponent_3",
+    "opponent_key",
+    "victory",
+    "points",
+    "rank",
+    "winner_player",
+    "winner_agent",
+    "rounds_played",
+    "last_turn",
+    "final_points_J0",
+    "final_points_J1",
+    "final_points_J2",
+    "final_points_J3",
+    "error",
+]
+
+
+def final_state_from_trace(game_trace):
+    last_round = max(game_trace["game"].keys(), key=lambda r: int(r.split("_")[-1]))
+    last_turn = max(game_trace["game"][last_round].keys(), key=lambda t: int(t.split("_")[-1].lstrip("P")))
+    victory_points = game_trace["game"][last_round][last_turn]["end_turn"]["victory_points"]
+    rounds_played = int(last_round.split("_")[-1])
+    return victory_points, rounds_played, last_turn
+
+
+def write_match_results_csv(path, rows):
+    with open(path, mode="w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=MATCH_FIELDNAMES, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
 
 def selected_agent_names():
     raw_value = os.getenv("BENCHMARK_STANDARD_AGENT_NAMES", "").strip()
@@ -86,24 +132,27 @@ def resolve_benchmark_agents():
             missing.append(agent_path)
     return available, missing
 
-def simulate_match(opponents, position, agente_alumno_clase, params=None, match_index=0):
+def simulate_match(opponents, position, agente_alumno_clase, params=None, match_index=0, permutation_index=0):
     try:
-        random.seed(random_seed_base + position * 100000 + match_index)
+        seed = random_seed_base + permutation_index * 1000000 + position * 100000 + match_index
+        random.seed(seed)
         agente_alumno_class = configured_agent_class(agente_alumno_clase, params)
+        metadata = agent_metadata(agente_alumno_clase, params)
 
         match_agents = list(opponents)
         match_agents.insert(position, agente_alumno_class)
+        opponent_names = [opponent.__name__ for opponent in opponents]
+        seat_agents = list(opponent_names)
+        seat_agents.insert(position, metadata["agent_name"])
 
         game_director = GameDirector(agents=match_agents, max_rounds=200, store_trace=False)
         game_trace = game_director.game_start(print_outcome=False)
 
-        last_round = max(game_trace["game"].keys(), key=lambda r: int(r.split("_")[-1]))
-        last_turn = max(game_trace["game"][last_round].keys(), key=lambda t: int(t.split("_")[-1].lstrip("P")))
-        victory_points = game_trace["game"][last_round][last_turn]["end_turn"]["victory_points"]
-
+        victory_points, rounds_played, last_turn = final_state_from_trace(game_trace)
         agent_id = f"J{position}"
         points = int(victory_points[agent_id])
         winner = max(victory_points, key=lambda player: int(victory_points[player]))
+        winner_index = int(winner.lstrip("J"))
         victory = 1 if winner == agent_id else 0
 
         ordenados = sorted(victory_points.items(), key=lambda item: int(item[1]), reverse=True)
@@ -114,25 +163,61 @@ def simulate_match(opponents, position, agente_alumno_clase, params=None, match_
                 break
 
         return {
+            "benchmark": "standard",
+            "run_id": os.getenv("BENCHMARK_RUN_ID", ""),
             "victory": victory,
             "points": points,
             "rank": rank,
             "position": position,
-            "seed": random_seed_base + position * 100000 + match_index,
-            "opponents": [opponent.__name__ for opponent in opponents],
-            **agent_metadata(agente_alumno_clase, params),
+            "seat": f"J{position}",
+            "seed": seed,
+            "match_index": match_index,
+            "permutation_index": permutation_index,
+            "opponents": opponent_names,
+            "opponent_1": opponent_names[0],
+            "opponent_2": opponent_names[1],
+            "opponent_3": opponent_names[2],
+            "opponent_key": "|".join(opponent_names),
+            "winner_player": winner,
+            "winner_agent": seat_agents[winner_index],
+            "rounds_played": rounds_played,
+            "last_turn": last_turn,
+            "final_points_J0": int(victory_points.get("J0", 0)),
+            "final_points_J1": int(victory_points.get("J1", 0)),
+            "final_points_J2": int(victory_points.get("J2", 0)),
+            "final_points_J3": int(victory_points.get("J3", 0)),
+            **metadata,
         }
     except Exception as e:
         print("Exception:", repr(e))
         print(traceback.format_exc())
+        opponent_names = [getattr(opponent, "__name__", str(opponent)) for opponent in opponents]
+        metadata = agent_metadata(agente_alumno_clase, params)
         return {
+            "benchmark": "standard",
+            "run_id": os.getenv("BENCHMARK_RUN_ID", ""),
             "victory": 0,
             "points": 0,
             "rank": 4,
             "position": position,
-            "seed": random_seed_base + position * 100000 + match_index,
-            "opponents": [getattr(opponent, "__name__", str(opponent)) for opponent in opponents],
-            **agent_metadata(agente_alumno_clase, params),
+            "seat": f"J{position}",
+            "seed": random_seed_base + permutation_index * 1000000 + position * 100000 + match_index,
+            "match_index": match_index,
+            "permutation_index": permutation_index,
+            "opponents": opponent_names,
+            "opponent_1": opponent_names[0] if len(opponent_names) > 0 else "",
+            "opponent_2": opponent_names[1] if len(opponent_names) > 1 else "",
+            "opponent_3": opponent_names[2] if len(opponent_names) > 2 else "",
+            "opponent_key": "|".join(opponent_names),
+            "winner_player": "",
+            "winner_agent": "",
+            "rounds_played": 0,
+            "last_turn": "",
+            "final_points_J0": 0,
+            "final_points_J1": 0,
+            "final_points_J2": 0,
+            "final_points_J3": 0,
+            **metadata,
             "error": repr(e),
         }
 
@@ -185,14 +270,22 @@ if __name__ == '__main__':
         def task_generator():
             for agente_path, params in agentes_a_evaluar:
                 agente_cls = load_agent_class(agente_path)
-                for perm in permutations:
+                for permutation_index, perm in enumerate(permutations):
                     for pos in range(4):
                         for match_index in range(n_matches_per_permutation):
-                            yield (list(perm), pos, agente_cls, params, agente_path, match_index)
+                            yield (list(perm), pos, agente_cls, params, agente_path, match_index, permutation_index)
 
 
-        for perm, pos, agente_cls, params, agente_path, match_index in task_generator():
-            fut = executor.submit(simulate_match, perm, pos, agente_cls, params=params, match_index=match_index)
+        for perm, pos, agente_cls, params, agente_path, match_index, permutation_index in task_generator():
+            fut = executor.submit(
+                simulate_match,
+                perm,
+                pos,
+                agente_cls,
+                params=params,
+                match_index=match_index,
+                permutation_index=permutation_index,
+            )
             futures_batch.append((fut, agente_path+str(params) if params is not None else agente_path))
 
 
@@ -280,6 +373,10 @@ if __name__ == '__main__':
             ensure_ascii=True,
         )
     print(f"Resultados detallados guardados en: {json_filename}")
+
+    matches_csv_filename = "benchmark_vs_estandar_partidas.csv"
+    write_match_results_csv(matches_csv_filename, all_match_results)
+    print(f"Resultados por partida guardados en: {matches_csv_filename}")
 
     end_time = time.time()
     horas, resto = divmod(end_time - start_time, 3600)

@@ -25,24 +25,71 @@ n_matches = 1000
 porcentaje_workers = 0.95
 random_seed_base = 12345
 
+MATCH_FIELDNAMES = [
+    "benchmark",
+    "run_id",
+    "agent_name",
+    "provider",
+    "model",
+    "prompt",
+    "match_index",
+    "seed",
+    "position",
+    "seat",
+    "opponent_1",
+    "opponent_2",
+    "opponent_3",
+    "victory",
+    "points",
+    "rank",
+    "winner_player",
+    "winner_agent",
+    "rounds_played",
+    "last_turn",
+    "final_points_J0",
+    "final_points_J1",
+    "final_points_J2",
+    "final_points_J3",
+    "error",
+]
+
+
+def final_state_from_trace(game_trace):
+    last_round = max(game_trace["game"].keys(), key=lambda r: int(r.split("_")[-1]))
+    last_turn = max(game_trace["game"][last_round].keys(), key=lambda t: int(t.split("_")[-1].lstrip("P")))
+    victory_points = game_trace["game"][last_round][last_turn]["end_turn"]["victory_points"]
+    rounds_played = int(last_round.split("_")[-1])
+    return victory_points, rounds_played, last_turn
+
+
+def write_match_results_csv(path, rows):
+    with open(path, mode="w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=MATCH_FIELDNAMES, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
 def simulate_match(position, agente_alumno_clase, params=None, match_index=0):
     try:
-        random.seed(random_seed_base + position * 100000 + match_index)
+        seed = random_seed_base + position * 100000 + match_index
+        random.seed(seed)
         agente_final = configured_agent_class(agente_alumno_clase, params)
+        metadata = agent_metadata(agente_alumno_clase, params)
 
         match_agents = [ra, ra, ra]
         match_agents.insert(position, agente_final)
+        seat_agents = ["RandomAgent", "RandomAgent", "RandomAgent", "RandomAgent"]
+        seat_agents[position] = metadata["agent_name"]
 
         game_director = GameDirector(agents=match_agents, max_rounds=200, store_trace=False)
         game_trace = game_director.game_start(print_outcome=False)
 
-        last_round = max(game_trace["game"].keys(), key=lambda r: int(r.split("_")[-1]))
-        last_turn = max(game_trace["game"][last_round].keys(), key=lambda t: int(t.split("_")[-1].lstrip("P")))
-        victory_points = game_trace["game"][last_round][last_turn]["end_turn"]["victory_points"]
-
+        victory_points, rounds_played, last_turn = final_state_from_trace(game_trace)
         agent_id = f"J{position}"
         points = int(victory_points[agent_id])
         winner = max(victory_points, key=lambda player: int(victory_points[player]))
+        winner_index = int(winner.lstrip("J"))
         victory = 1 if winner == agent_id else 0
 
         ordenados = sorted(victory_points.items(), key=lambda item: int(item[1]), reverse=True)
@@ -53,12 +100,27 @@ def simulate_match(position, agente_alumno_clase, params=None, match_index=0):
                 break
 
         return {
+            "benchmark": "random",
+            "run_id": os.getenv("BENCHMARK_RUN_ID", ""),
             "victory": victory,
             "points": points,
             "rank": rank,
             "position": position,
-            "seed": random_seed_base + position * 100000 + match_index,
-            **agent_metadata(agente_alumno_clase, params),
+            "seat": f"J{position}",
+            "seed": seed,
+            "match_index": match_index,
+            "opponent_1": "RandomAgent",
+            "opponent_2": "RandomAgent",
+            "opponent_3": "RandomAgent",
+            "winner_player": winner,
+            "winner_agent": seat_agents[winner_index],
+            "rounds_played": rounds_played,
+            "last_turn": last_turn,
+            "final_points_J0": int(victory_points.get("J0", 0)),
+            "final_points_J1": int(victory_points.get("J1", 0)),
+            "final_points_J2": int(victory_points.get("J2", 0)),
+            "final_points_J3": int(victory_points.get("J3", 0)),
+            **metadata,
         }
     except Exception as e:
         print("\n=== EXCEPCIÓN EN simulate_match ===")
@@ -66,13 +128,29 @@ def simulate_match(position, agente_alumno_clase, params=None, match_index=0):
         print("Posición:", position, "params type:", type(params), "params:", params)
         print("Exception:", repr(e))
         print(traceback.format_exc())
+        metadata = agent_metadata(agente_alumno_clase, params)
         return {
+            "benchmark": "random",
+            "run_id": os.getenv("BENCHMARK_RUN_ID", ""),
             "victory": 0,
             "points": 0,
             "rank": 4,
             "position": position,
+            "seat": f"J{position}",
             "seed": random_seed_base + position * 100000 + match_index,
-            **agent_metadata(agente_alumno_clase, params),
+            "match_index": match_index,
+            "opponent_1": "RandomAgent",
+            "opponent_2": "RandomAgent",
+            "opponent_3": "RandomAgent",
+            "winner_player": "",
+            "winner_agent": "",
+            "rounds_played": 0,
+            "last_turn": "",
+            "final_points_J0": 0,
+            "final_points_J1": 0,
+            "final_points_J2": 0,
+            "final_points_J3": 0,
+            **metadata,
             "error": repr(e),
         }
 
@@ -82,6 +160,8 @@ if __name__ == '__main__':
     if os.getenv("BENCHMARK_QUICK", "0") == "1":
         n_matches = 5
     n_matches = int(os.getenv("BENCHMARK_RANDOM_MATCHES", str(n_matches)))
+    if n_matches <= 0:
+        raise SystemExit("BENCHMARK_RANDOM_MATCHES debe ser mayor que 0 para benchmark_vs_random.py")
     total_workers = os.cpu_count() or 1
     worker_fraction = float(os.getenv("BENCHMARK_WORKER_FRACTION", str(porcentaje_workers)))
     explicit_workers = os.getenv("BENCHMARK_WORKERS")
@@ -170,6 +250,10 @@ if __name__ == '__main__':
     with open(json_filename, mode="w", encoding="utf-8") as jsonfile:
         json.dump(all_match_results, jsonfile, indent=2, ensure_ascii=True)
     print(f"Resultados detallados guardados en: {json_filename}")
+
+    matches_csv_filename = "benchmark_vs_random_partidas.csv"
+    write_match_results_csv(matches_csv_filename, all_match_results)
+    print(f"Resultados por partida guardados en: {matches_csv_filename}")
 
     end_time = time.time()
     horas, resto = divmod(end_time - start_time, 3600)

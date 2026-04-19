@@ -46,9 +46,19 @@ class DevelopmentCard: # de verdad hace falta type y effect?
     :param effect: En función del número que tiene, hace una cosa u otra.
     """
 
-    def __init__(self, type='', effect=0):
-        self.type = type
-        self.effect = effect
+    def __init__(self, *args):
+        if len(args) == 0:
+            type_value = ''
+            effect_value = 0
+        elif len(args) == 2:
+            type_value, effect_value = args
+        elif len(args) == 3:
+            _, type_value, effect_value = args
+        else:
+            raise TypeError("DevelopmentCard expects 0, 2 or 3 positional arguments")
+
+        self.type = type_value
+        self.effect = effect_value
         return
 
     def __str__(self):

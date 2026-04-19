@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RESULTS_DIR="$ROOT_DIR/results"
+
+RANDOM_MATCHES="${1:-20}"
+STANDARD_MATCHES="${2:-0}"
+
+mkdir -p "$RESULTS_DIR"
+
+cd "$ROOT_DIR"
+
+echo "Ejecutando heuristico contra random con $RANDOM_MATCHES partidas por posicion"
+BENCHMARK_TARGET=heuristic \
+BENCHMARK_RANDOM_MATCHES="$RANDOM_MATCHES" \
+python Benchmarks/benchmark_vs_random.py
+
+cp benchmark_vs_random_resultados.csv "$RESULTS_DIR/heuristic_random.csv"
+cp benchmark_vs_random_resultados.json "$RESULTS_DIR/heuristic_random.json"
+
+if [[ "$STANDARD_MATCHES" -gt 0 ]]; then
+  echo "Ejecutando heuristico contra agentes estandar con $STANDARD_MATCHES partidas por permutacion"
+  BENCHMARK_TARGET=heuristic \
+  BENCHMARK_STANDARD_MATCHES="$STANDARD_MATCHES" \
+  python Benchmarks/benchmark_vs_agentes_estandar.py
+
+  cp benchmark_vs_estandar_resultados.csv "$RESULTS_DIR/heuristic_standard.csv"
+  cp benchmark_vs_estandar_resultados.json "$RESULTS_DIR/heuristic_standard.json"
+else
+  rm -f "$RESULTS_DIR/heuristic_standard.csv" "$RESULTS_DIR/heuristic_standard.json"
+fi
+
+echo "Resultados guardados en $RESULTS_DIR"

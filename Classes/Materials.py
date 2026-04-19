@@ -58,7 +58,10 @@ class Materials(NamedTuple):
         """
         if isinstance(materials, str):
             materials = Materials.from_building(materials)
-            
+
+        if materials.check_negative():
+            return False
+
         return all(materials <= self)
     
     def __str__(self):

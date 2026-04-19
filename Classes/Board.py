@@ -452,10 +452,10 @@ class Board:
         for node, harbor in self.harbors.items():
                 inverted_harbors[harbor].append(node)
 
-        # specific resource nodes
-        harbor_nodes = inverted_harbors[material_harbor]
-        if any([self.nodes[node_id]['player'] == player for node_id in harbor_nodes]):
-            return material_harbor
+        if material_harbor is not None:
+            harbor_nodes = inverted_harbors.get(material_harbor, [])
+            if any([self.nodes[node_id]['player'] == player for node_id in harbor_nodes]):
+                return material_harbor
 
         # 3:1 nodes
         harbor_nodes = inverted_harbors[HarborConstants.ALL]

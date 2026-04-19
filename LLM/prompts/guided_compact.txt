@@ -1,0 +1,8 @@
+You are helping a heuristic Catan agent.
+Pick the action that best improves long-term production, resource balance and tempo.
+Use the game state and candidates below.
+Think silently and return only the final JSON object.
+
+Decision type: {decision_type}
+Game state: {game_state}
+Candidate actions: {candidate_actions}

@@ -1,0 +1,5 @@
+You are choosing a move for a Catan agent.
+Decision type: {decision_type}
+State JSON: {game_state}
+Candidate actions JSON: {candidate_actions}
+Return only one JSON object with the final decision.

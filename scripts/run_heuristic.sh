@@ -11,13 +11,17 @@ mkdir -p "$RESULTS_DIR"
 
 cd "$ROOT_DIR"
 
-echo "Ejecutando heuristico contra random con $RANDOM_MATCHES partidas por posicion"
-BENCHMARK_TARGET=heuristic \
-BENCHMARK_RANDOM_MATCHES="$RANDOM_MATCHES" \
-python Benchmarks/benchmark_vs_random.py
+if [[ "$RANDOM_MATCHES" -gt 0 ]]; then
+  echo "Ejecutando heuristico contra random con $RANDOM_MATCHES partidas por posicion"
+  BENCHMARK_TARGET=heuristic \
+  BENCHMARK_RANDOM_MATCHES="$RANDOM_MATCHES" \
+  python Benchmarks/benchmark_vs_random.py
 
-cp benchmark_vs_random_resultados.csv "$RESULTS_DIR/heuristic_random.csv"
-cp benchmark_vs_random_resultados.json "$RESULTS_DIR/heuristic_random.json"
+  cp benchmark_vs_random_resultados.csv "$RESULTS_DIR/heuristic_random.csv"
+  cp benchmark_vs_random_resultados.json "$RESULTS_DIR/heuristic_random.json"
+else
+  echo "Saltando heuristico contra random porque RANDOM_MATCHES=$RANDOM_MATCHES"
+fi
 
 if [[ "$STANDARD_MATCHES" -gt 0 ]]; then
   echo "Ejecutando heuristico contra agentes estandar con $STANDARD_MATCHES partidas por permutacion"

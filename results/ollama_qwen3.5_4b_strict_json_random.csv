@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+HybridLLMAgent,ollama,ollama/qwen3.5:4b,strict_json,4,40,4,1.0000,10.00,1.00

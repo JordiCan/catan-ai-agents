@@ -1,0 +1,2 @@
+provider,model,prompt,log_rows,game_start_samples,game_start_success_rate,game_start_latency_ms,game_start_prompt_tokens,game_start_completion_tokens,build_samples,build_success_rate,build_latency_ms,build_prompt_tokens,build_completion_tokens
+poligpt,openai/poligpt,direct_short,421,48,1.000000,7436.91,430.52,251.40,373,1.000000,8432.04,275.17,277.65

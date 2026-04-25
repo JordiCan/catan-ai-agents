@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'poligpt', 'model_name': 'openai/qwen', 'prompt_name': 'direct_short', 'llm_enabled': True, 'log_path': '/data/jcanfer1@alumno.upv.es/catan-ai-agents/results/poligpt_qwen_direct_short.jsonl'}",poligpt,openai/qwen,direct_short,24,245,24,1.0000,10.21,1.00

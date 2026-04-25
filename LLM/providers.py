@@ -1,6 +1,7 @@
-import json
-import time
 import io
+import json
+import os
+import time
 from contextlib import redirect_stderr, redirect_stdout
 
 from LLM.base import LLMProvider, ProviderError
@@ -46,7 +47,7 @@ class LiteLLMProvider(LLMProvider):
         if provider_name == "ollama":
             return "ollama/llama3.1"
         if provider_name == "bedrock":
-            return "bedrock/anthropic.claude-3-haiku-20240307-v1:0"
+            return "bedrock/amazon.nova-micro-v1:0"
         return "mock-rule"
 
     def _resolve_api_base(self, provider_name):
@@ -59,6 +60,8 @@ class LiteLLMProvider(LLMProvider):
     def _resolve_api_key(self, provider_name):
         if provider_name == "poligpt":
             return coalesce_env("POLIGPT_KEY", "POLIGPT_API_KEY")
+        if provider_name == "bedrock":
+            return coalesce_env("AWS_BEARER_TOKEN_BEDROCK", "BEDROCK_KEY")
         return None
 
     def generate(self, prompt, **kwargs):
@@ -85,7 +88,11 @@ class LiteLLMProvider(LLMProvider):
             completion_kwargs["api_base"] = self.api_base
 
         if self.provider_name == "bedrock":
-            region_name = coalesce_env("AWS_DEFAULT_REGION", default="eu-west-1")
+            if self.api_key:
+                # Bedrock API keys are exposed through the standard bearer-token env var.
+                os.environ.setdefault("AWS_BEARER_TOKEN_BEDROCK", self.api_key)
+                completion_kwargs["api_key"] = self.api_key
+            region_name = coalesce_env("AWS_DEFAULT_REGION", "AWS_REGION", default="eu-west-1")
             completion_kwargs["aws_region_name"] = region_name
 
         try:

@@ -172,7 +172,6 @@ Traces/
 .vscode/
 .codex
 artifacts/
-results/
 benchmark_vs_random_resultados.csv
 benchmark_vs_random_resultados.json
 benchmark_vs_estandar_resultados.csv

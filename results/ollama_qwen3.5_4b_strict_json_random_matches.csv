@@ -1,0 +1,5 @@
+benchmark,run_id,agent_name,provider,model,prompt,match_index,seed,position,seat,opponent_1,opponent_2,opponent_3,victory,points,rank,winner_player,winner_agent,rounds_played,last_turn,final_points_J0,final_points_J1,final_points_J2,final_points_J3,error
+random,ollama_qwen3.5_4b_strict_json_20260421_210751,HybridLLMAgent,ollama,ollama/qwen3.5:4b,strict_json,0,12345,0,J0,RandomAgent,RandomAgent,RandomAgent,1,10,1,J0,HybridLLMAgent,18,turn_P0,10,2,3,2,
+random,ollama_qwen3.5_4b_strict_json_20260421_210751,HybridLLMAgent,ollama,ollama/qwen3.5:4b,strict_json,0,112345,1,J1,RandomAgent,RandomAgent,RandomAgent,1,10,1,J1,HybridLLMAgent,18,turn_P1,2,10,2,2,
+random,ollama_qwen3.5_4b_strict_json_20260421_210751,HybridLLMAgent,ollama,ollama/qwen3.5:4b,strict_json,0,212345,2,J2,RandomAgent,RandomAgent,RandomAgent,1,10,1,J2,HybridLLMAgent,20,turn_P2,5,2,10,2,
+random,ollama_qwen3.5_4b_strict_json_20260421_210751,HybridLLMAgent,ollama,ollama/qwen3.5:4b,strict_json,0,312345,3,J3,RandomAgent,RandomAgent,RandomAgent,1,10,1,J3,HybridLLMAgent,17,turn_P3,2,4,3,10,

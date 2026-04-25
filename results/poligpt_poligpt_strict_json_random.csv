@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+HybridLLMAgent,poligpt,openai/poligpt,strict_json,12,120,12,1.0000,10.00,1.00

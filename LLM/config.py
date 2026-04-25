@@ -12,6 +12,16 @@ def load_env():
         return False
 
     load_dotenv(ENV_PATH)
+    # Normalize common AWS keys from lowercase .env entries.
+    for lower_key, upper_key in {
+        "aws_access_key_id": "AWS_ACCESS_KEY_ID",
+        "aws_secret_access_key": "AWS_SECRET_ACCESS_KEY",
+        "aws_session_token": "AWS_SESSION_TOKEN",
+        "aws_default_region": "AWS_DEFAULT_REGION",
+        "aws_region": "AWS_REGION",
+    }.items():
+        if not os.getenv(upper_key) and os.getenv(lower_key):
+            os.environ[upper_key] = os.getenv(lower_key, "").strip()
     return True
 
 
@@ -19,7 +29,7 @@ def coalesce_env(*keys, default=None):
     for key in keys:
         value = os.getenv(key)
         if value not in (None, ""):
-            return value
+            return value.strip()
     return default
 
 

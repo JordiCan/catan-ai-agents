@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'ollama', 'model_name': 'ollama/ministral-3:3b', 'prompt_name': 'guided_compact', 'llm_enabled': True, 'log_path': '/root/catan-ai-agents/results/ollama_ministral-3_3b_guided_compact.jsonl'}",ollama,ollama/ministral-3:3b,guided_compact,5,132,24,0.2083,5.50,2.33

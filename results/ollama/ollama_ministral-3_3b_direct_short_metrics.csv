@@ -1,0 +1,2 @@
+provider,model,prompt,log_rows,game_start_samples,game_start_success_rate,game_start_latency_ms,game_start_prompt_tokens,game_start_completion_tokens,build_samples,build_success_rate,build_latency_ms,build_prompt_tokens,build_completion_tokens
+ollama,ollama/ministral-3:3b,direct_short,937,48,1.000000,1160.78,977.79,61.50,889,0.984252,1171.27,768.51,69.24

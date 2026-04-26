@@ -1,0 +1,2 @@
+provider,model,prompt,log_rows,game_start_samples,game_start_success_rate,game_start_latency_ms,game_start_prompt_tokens,game_start_completion_tokens,build_samples,build_success_rate,build_latency_ms,build_prompt_tokens,build_completion_tokens
+bedrock,bedrock/amazon.nova-lite-v1:0,strict_json,501,48,1.000000,559.06,455.27,31.31,453,1.000000,536.70,233.57,31.43

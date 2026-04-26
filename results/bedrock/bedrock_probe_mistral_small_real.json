@@ -1,0 +1,15 @@
+[
+  {
+    "winner": 0,
+    "victory_points": {
+      "P0": 10,
+      "P1": 2,
+      "P2": 2,
+      "P3": 2
+    },
+    "largest_army_player": null,
+    "longest_road_player": -1,
+    "rounds_played": 18,
+    "seed": 214
+  }
+]

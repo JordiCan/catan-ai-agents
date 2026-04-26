@@ -1,0 +1,2 @@
+provider,model,prompt,log_rows,game_start_samples,game_start_success_rate,game_start_latency_ms,game_start_prompt_tokens,game_start_completion_tokens,build_samples,build_success_rate,build_latency_ms,build_prompt_tokens,build_completion_tokens
+bedrock,bedrock/ai21.jamba-1-5-large-v1:0,direct_short,500,48,1.000000,1137.34,462.06,35.96,452,1.000000,1255.16,241.22,43.17

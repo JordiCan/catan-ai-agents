@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'bedrock', 'model_name': 'bedrock/mistral.mistral-small-2402-v1:0', 'prompt_name': 'direct_short', 'llm_enabled': True, 'log_path': '/root/catan-ai-agents/results/bedrock_mistral.mistral-small-2402-v1_0_direct_short.jsonl'}",bedrock,bedrock/mistral.mistral-small-2402-v1:0,direct_short,24,246,24,1.0000,10.25,1.00

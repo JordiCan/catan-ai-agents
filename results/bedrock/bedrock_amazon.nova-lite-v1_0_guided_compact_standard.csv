@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'bedrock', 'model_name': 'bedrock/amazon.nova-lite-v1:0', 'prompt_name': 'guided_compact', 'llm_enabled': True, 'log_path': '/root/catan-ai-agents/results/bedrock_amazon.nova-lite-v1_0_guided_compact.jsonl'}",bedrock,bedrock/amazon.nova-lite-v1:0,guided_compact,24,252,24,1.0000,10.50,1.00

@@ -24,9 +24,8 @@ POLIGPT_REASONING_MODELS = [
 
 OLLAMA_TEXT_MODELS = [
     "llama3.2:3b",
-    "qwen3:4b",
-    "gemma3:4b",
-    "phi4-mini:3.8b",
+    "gemma3:1b",
+    "ministral-3:3b",
 ]
 
 PROMPT_VARIANTS = ["direct_short", "strict_json", "guided_compact"]

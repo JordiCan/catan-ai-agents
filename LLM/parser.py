@@ -27,7 +27,19 @@ def parse_json_response(text):
     return data
 
 
+def unwrap_action_object(data):
+    if not isinstance(data, dict):
+        raise ValueError("Model response must be a JSON object")
+
+    for key in ("action", "result", "response"):
+        nested = data.get(key)
+        if isinstance(nested, dict):
+            return nested
+    return data
+
+
 def validate_start_response(data):
+    data = unwrap_action_object(data)
     if not isinstance(data.get("node_id"), int):
         raise ValueError("node_id must be an int")
     if not isinstance(data.get("road_to"), int):
@@ -36,6 +48,7 @@ def validate_start_response(data):
 
 
 def validate_build_response(data):
+    data = unwrap_action_object(data)
     building = data.get("building")
     if building not in {"town", "city", "road", "card", None}:
         raise ValueError("Invalid building type")

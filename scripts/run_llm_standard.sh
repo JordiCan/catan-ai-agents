@@ -39,6 +39,13 @@ if [[ "$PROVIDER_NAME" == "poligpt" ]]; then
 elif [[ "$PROVIDER_NAME" == "ollama" ]]; then
   export BENCHMARK_OLLAMA_MODELS="$MODEL"
   TARGET_NAME="ollama"
+elif [[ "$PROVIDER_NAME" == "bedrock" ]]; then
+  if [[ "$MODEL" != bedrock/* ]]; then
+    export CATAN_LLM_MODEL="bedrock/$MODEL"
+  else
+    export CATAN_LLM_MODEL="$MODEL"
+  fi
+  TARGET_NAME="bedrock"
 else
   echo "Provider no soportado en este script: $PROVIDER_NAME"
   exit 1

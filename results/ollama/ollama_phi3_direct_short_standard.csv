@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'ollama', 'model_name': 'ollama/phi3', 'prompt_name': 'direct_short', 'llm_enabled': True, 'log_path': '/root/catan-ai-agents/results/ollama_phi3_direct_short.jsonl'}",ollama,ollama/phi3,direct_short,24,243,24,1.0000,10.12,1.00

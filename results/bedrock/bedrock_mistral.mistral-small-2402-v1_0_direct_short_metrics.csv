@@ -1,0 +1,2 @@
+provider,model,prompt,log_rows,game_start_samples,game_start_success_rate,game_start_latency_ms,game_start_prompt_tokens,game_start_completion_tokens,build_samples,build_success_rate,build_latency_ms,build_prompt_tokens,build_completion_tokens
+bedrock,bedrock/mistral.mistral-small-2402-v1:0,direct_short,516,48,1.000000,1478.91,448.21,79.56,468,1.000000,1908.48,226.09,111.48

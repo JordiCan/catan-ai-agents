@@ -1,0 +1,2 @@
+Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
+"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'ollama', 'model_name': 'ollama/gemma3:1b', 'prompt_name': 'guided_compact', 'llm_enabled': True, 'log_path': '/root/catan-ai-agents/results/ollama_gemma3_1b_guided_compact.jsonl'}",ollama,ollama/gemma3:1b,guided_compact,0,48,24,0.0000,2.00,3.67

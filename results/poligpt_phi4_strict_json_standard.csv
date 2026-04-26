@@ -1,2 +1,0 @@
-Agente,Provider,Model,Prompt,Victorias,Puntos,Partidas,Ratio Victorias,Media Puntos,Puesto Medio
-"Agents.HybridLLMAgent.HybridLLMAgent{'provider_name': 'poligpt', 'model_name': 'openai/phi4', 'prompt_name': 'strict_json', 'llm_enabled': True, 'log_path': '/data/jcanfer1@alumno.upv.es/catan-ai-agents/results/poligpt_phi4_strict_json.jsonl'}",poligpt,openai/phi4,strict_json,0,92,24,0.0000,3.83,2.96

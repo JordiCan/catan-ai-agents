@@ -18,9 +18,9 @@ If you need a short formulation for the final report, a correct way to cite it w
 
 The main changes introduced in this adaptation are:
 
-- Development of a custom heuristic agent in [HeuristicAgent.py](/root/catan-ai-agents/Agents/HeuristicAgent.py).
-- Extraction of strategic evaluation logic into [HeuristicEvaluator.py](/root/catan-ai-agents/Strategy/HeuristicEvaluator.py).
-- Integration of a hybrid LLM-enabled agent in [HybridLLMAgent.py](/root/catan-ai-agents/Agents/HybridLLMAgent.py).
+- Development of a custom heuristic agent in [HeuristicAgent.py](Agents/HeuristicAgent.py).
+- Extraction of strategic evaluation logic into [HeuristicEvaluator.py](Strategy/HeuristicEvaluator.py).
+- Integration of a hybrid LLM-enabled agent in [HybridLLMAgent.py](Agents/HybridLLMAgent.py).
 - Unified LLM provider layer in `LLM/`, with support for `Poligpt`, `Ollama`, `Bedrock`, and `mock` mode.
 - Versioned prompt system in `LLM/prompts/`.
 - Benchmark adaptations to evaluate the agent against `RandomAgent` and the standard agents available in the repository.
@@ -29,13 +29,13 @@ The main changes introduced in this adaptation are:
 
 ## Relevant project structure
 
-- [Agents/HeuristicAgent.py](/root/catan-ai-agents/Agents/HeuristicAgent.py): main heuristic agent.
-- [Agents/HybridLLMAgent.py](/root/catan-ai-agents/Agents/HybridLLMAgent.py): hybrid agent with heuristic fallback.
-- [Strategy/HeuristicEvaluator.py](/root/catan-ai-agents/Strategy/HeuristicEvaluator.py): evaluation functions for nodes, roads, trading, and robber actions.
-- [LLM/providers.py](/root/catan-ai-agents/LLM/providers.py): model provider integration.
-- [Benchmarks/benchmark_vs_random.py](/root/catan-ai-agents/Benchmarks/benchmark_vs_random.py): benchmark against random.
-- [Benchmarks/benchmark_vs_agentes_estandar.py](/root/catan-ai-agents/Benchmarks/benchmark_vs_agentes_estandar.py): benchmark against the available standard agents.
-- [Experiments/analyze_results.py](/root/catan-ai-agents/Experiments/analyze_results.py): result analysis and chart generation.
+- [Agents/HeuristicAgent.py](Agents/HeuristicAgent.py): main heuristic agent.
+- [Agents/HybridLLMAgent.py](Agents/HybridLLMAgent.py): hybrid agent with heuristic fallback.
+- [Strategy/HeuristicEvaluator.py](Strategy/HeuristicEvaluator.py): evaluation functions for nodes, roads, trading, and robber actions.
+- [LLM/providers.py](LLM/providers.py): model provider integration.
+- [Benchmarks/benchmark_vs_random.py](Benchmarks/benchmark_vs_random.py): benchmark against random.
+- [Benchmarks/benchmark_vs_agentes_estandar.py](Benchmarks/benchmark_vs_agentes_estandar.py): benchmark against the available standard agents.
+- [Experiments/analyze_results.py](Experiments/analyze_results.py): result analysis and chart generation.
 
 ## Agents implemented for the project
 
@@ -117,7 +117,8 @@ LLM with Ollama:
 LLM_PROVIDER=ollama ./scripts/run_llm.sh llama3.2:3b 10 strict_json
 ```
 
-All results are stored in `results/`.
+All generated outputs are stored in `results/`.
+That directory is intentionally kept in the repository because it contains the experiment artifacts referenced by the project.
 If you want to include a benchmark against standard agents, add a fourth parameter to the LLM script and a second parameter to the heuristic one.
 
 If you want to run only against standard agents with a short test:
@@ -215,9 +216,19 @@ The analysis generates:
 - margin over the runner-up
 - point and duration distributions
 
+## Recommended result files
+
+If you are browsing the repository for the first time, these are good starting points inside `results/`:
+
+- `results/heuristic_random.json`: baseline heuristic agent results against random opponents.
+- `results/heuristic_standard.json`: heuristic agent results against the standard agents.
+- `results/analysis/llm_prompt_summary.csv`: compact comparison of prompt variants.
+- `results/analysis/llm_model_summary.csv`: compact comparison of evaluated models.
+- `results/logs/heuristic_random.out`: example console output from a benchmark run.
+
 ## Visualization
 
-1. Open [index.html](/root/catan-ai-agents/Visualizer/index.html).
+1. Open [index.html](Visualizer/index.html).
 2. Load a JSON trace from the file picker.
 
 <img src="assets/visualizer_screenshot.png" width="900" alt="Screenshot of the visualizer">

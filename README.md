@@ -179,43 +179,6 @@ BENCHMARK_QUICK=1 BENCHMARK_TARGET=mock python Benchmarks/benchmark_vs_random.py
 BENCHMARK_QUICK=1 BENCHMARK_TARGET=poligpt python Benchmarks/benchmark_vs_random.py
 ```
 
-## Result analysis
-
-To regenerate tables and report macros from the CSV files in `results/`:
-
-```bash
-python memoria/generate_report_data.py
-```
-
-And to compile the report:
-
-```bash
-cd memoria
-pdflatex main.tex
-pdflatex main.tex
-```
-
-To generate statistics and charts:
-
-```bash
-python -m Experiments.analyze_results artifacts/heuristic.json --output-dir artifacts/analysis_heuristic
-```
-
-Or by comparing several result files:
-
-```bash
-python -m Experiments.analyze_results artifacts/heuristic.json artifacts/llm_poligpt.json --labels heuristic poligpt --output-dir artifacts/analysis_compare
-```
-
-The analysis generates:
-
-- JSON summary
-- win rate
-- average points
-- average rounds
-- margin over the runner-up
-- point and duration distributions
-
 ## Recommended result files
 
 If you are browsing the repository for the first time, these are good starting points inside `results/`:

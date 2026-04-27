@@ -187,7 +187,7 @@ If you are browsing the repository for the first time, these are good starting p
 - `results/heuristic_standard.json`: heuristic agent results against the standard agents.
 - `results/analysis/llm_prompt_summary.csv`: compact comparison of prompt variants.
 - `results/analysis/llm_model_summary.csv`: compact comparison of evaluated models.
-- `results/logs/heuristic_random.out`: example console output from a benchmark run.
+- `results/matches/heuristic_random_matches.csv`: example per-match output from a benchmark run.
 
 ## Visualization
 
